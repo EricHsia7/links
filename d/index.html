@@ -130,11 +130,12 @@ var data = {
   ]
 }
 */
+  var data
   var da = url.searchParams.get('data') ;
   
   if(!(da ===  null)) {
     da = String(da)
-    var data = JSON.parse(deur(decu(da.split(':')[0],da.split(':')[1])))
+    data = JSON.parse(deur(decu(da.split(':')[0],da.split(':')[1])))
   }
   
   
