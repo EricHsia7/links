@@ -133,11 +133,12 @@ var data = {
   var data
   var da = url.searchParams.get('data') ;
   
-  if(!(da ===  null)) {
+  if(!(da === null)) {
     da = String(da)
-    data = JSON.parse(deur(decu(da.split(':')[0],da.split(':')[1])))
+    data = JSON.parse(String(deur(decu(da.split(':')[0],da.split(':')[1]))))
   }
   
+  //data = JSON.parse(deur(decu(String(url.searchParams.get('data')).split(':')[0],String(url.searchParams.get('data')).split(':')[1])))
   
   
 function ripple(select,color,opacity,time,removewh) {
