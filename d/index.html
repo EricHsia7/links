@@ -1,0 +1,188 @@
+<meta charset="UTF-8">
+<title>Links</title>
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com"> 
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=0" />
+<style>
+.box {
+  position:absolute;
+  top:0px;
+  left:0px;
+  width:100%;
+  min-height:100vh;
+  display: flex;
+  flex-direction:column;
+  align-items: center;
+}
+.box-title {
+  width:100%;
+  height:60px;
+  font-size:30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top:10px;
+  font-family: 'Noto Sans TC', sans-serif;
+}
+.box-description {
+  width:var(--d-width);
+  height:auto;
+  font-size:15px;
+  text-align:center;
+  margin-bottom:10px;
+  font-family: 'Noto Sans TC', sans-serif;
+}
+</style>
+</head>
+
+<body>
+<div class="box">
+  <style id="style"></style>
+</div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+var data = {
+  'title':'Links',
+  'theme_color':'#f5f5f5',
+  'text_color':'#333',
+  'description':'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  'links':[
+    {
+      'text':'Google',
+      'style':'b',
+      'url':'https://google.com',
+      'image':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/240px-Google_%22G%22_Logo.svg.png'
+    },
+    {
+      'text':'Google',
+      'style':'a',
+      'url':'https://google.com'
+    },
+    {
+      'text':'Google',
+      'style':'c',
+      'url':'https://google.com'
+    },
+    {
+      'text':'Google',
+      'style':'d',
+      'url':'https://google.com',
+      'image':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/240px-Google_%22G%22_Logo.svg.png'
+    },
+    {
+      'text':'C',
+      'style':'a',
+      'url':'https://erichsia7.github.io/colors/?s=1&c=I2E3ZDVjMA==&sou=recommend&r=248e2zoe0n6p35eo'
+    }
+  ]
+}
+
+function ripple(select,color,opacity,time,removewh) {
+$(select).on( "click", function( eee ) {
+    if(removewh === 'true') {
+  $(this).css({'width':'','height':''});
+    }
+var ogstyle = $(this).attr('style');
+
+var ppchars = "0123456789abcdefghijklmnopqrstuvwxyz";
+            var ppid = "";
+            for (var i = 0; i < 16; i++) {
+                var randomNumber = Math.floor(Math.random() * ppchars.length);
+                ppid += ppchars.substring(randomNumber, randomNumber + 1);
+            }
+
+            var ppcharsa = "0123456789abcdefghijklmnopqrstuvwxyz";
+            var ppida = "";
+            for (var ia = 0; ia < 16; ia++) {
+                var randomNumbera = Math.floor(Math.random() * ppcharsa.length);
+                ppida += ppcharsa.substring(randomNumbera, randomNumbera + 1);
+            }
+$(this).attr('rippleid',ppida);
+
+  var pou = 'relative' ;
+  if($(this).css('position') === 'absolute') {
+    pou = 'absolute' ;
+  }
+  if($(this).css('position') === 'fixed') {
+    pou = 'fixed' ;
+  }
+  
+            $(this).css({'width':$(this).width() + 'px','height':$(this).height() + 'px','position':pou,'overflow':'hidden','outline':'none','-webkit-tap-highlight-color':'rgba(0,0,0,0)'});
+ ggww = ($(this).width()+$(this).height())*2 ;
+if($(this).width() > $(this).height()) {
+ggww = $(this).width()*4 ;
+}
+else {
+ggww = $(this).height()*4 ;
+}
+
+ var xPos = (eee.pageX - $(this).offset().left)-(ggww/2);
+ var yPos = (eee.pageY - $(this).offset().top)-(ggww/2);
+$('body').append('<style vgf="' + ppid + '">.rippleanimation' + ppid + ' {animation-name:ripple' + ppid + ';animation-duration:' + (time/1000) + 's;animation-fill-mode:forwards;animation-timing-function:ease-out}@keyframes ripple' + ppid + ' {0%{opacity:' + opacity + ';transform:scale(0)}60%{opacity:' + (0) + ';transform:scale(0.8)}100%{opacity:' + (0) + ';transform:scale(1)}}</style>');
+$(this).append('<div style="width:' + ggww + 'px;height:' + ggww + 'px;position: absolute;top:' + yPos + 'px;left:' + xPos + 'px;border-radius:99em;transform:scale(0);opacity:' + opacity + ';background:' + color + '; overflow:hidden; -webkit-user-select:none; outline:none; -webkit-tap-highlight-color:rgba(0,0,0,0);" id="' + ppid + '"></div>');
+
+setTimeout(function () {
+                    $('#' + ppid).attr('class','rippleanimation' + ppid)
+                }, 1);
+     setTimeout(function () {
+                    $('#' + ppid).remove();
+                    $('style[vgf="' + ppid + '"]').remove();
+                    $('*[rippleid="' + ppida + '"]').attr('style',ogstyle);
+                }, time/0.9);
+  if($(this).attr('ripple-onclick') != '') {
+
+  eval('setTimeout(function() {' + $(this).attr('ripple-onclick') + '},' + ((5+(time/1.5))/2) + ');');
+  
+}
+});
+}
+
+
+function initialize() {
+  $('title').text(data.title)
+  $('#style').html(':root{--d-theme-color:' + data.theme_color + ';--d-theme-text:' + data.text_color + ';--d-width:clamp(120px,90%,350px)}')
+  
+  var descriptionhtml = '<div class="box-description">' + data.description + '</div>'
+  if(String(data.description).length < 1) {
+    descriptionhtml = ''
+  }
+  $('.box').append('<div class="box-title">' + data.title + '</div>' + descriptionhtml)
+  
+  for (var i = 0; i < data.links.length; i++) {
+    var th = data.links[i]
+    var style_a = "background:var(--d-theme-color);width:var(--d-width);height:45px;border-radius:15px;display: flex;justify-content: center;align-items: center;color:var(--d-theme-text);-webkit-mask-image:-webkit-radial-gradient(white,black);-webkit-user-select:none;overflow:hidden;-webkit-appearance:none;outline:none;-webkit-tap-highlight-color:rgba(0,0,0,0);font-size:18px;font-family: 'Noto Sans TC', sans-serif;margin-top:10px"
+    
+    
+    var style_c =  "border: 1px solid var(--d-theme-text);width:calc(var(--d-width) - 1px * 2);height:calc(45px - 1px * 2);border-radius:15px;display: flex;justify-content: center;align-items: center;color:var(--d-theme-text);-webkit-mask-image:-webkit-radial-gradient(white,black);-webkit-user-select:none;overflow:hidden;-webkit-appearance:none;outline:none;-webkit-tap-highlight-color:rgba(0,0,0,0);font-size:18px;font-family: 'Noto Sans TC', sans-serif;margin-top:10px;"
+    
+    
+    var st = ''
+    var img = ''
+    if(th.style === 'a') {
+      st = style_a
+    }
+    if(th.style === 'b') {
+      st = style_a
+      img = '<div class="link-img" style="width:25px;height:25px;background:url(' + th.image + ');background-size:cover;background-position:center;background-repeat:no-repeat;"></div><div style="height:45px;width:6px;"></div>'
+    }
+    if(th.style === 'c') {
+      st = style_c
+    }
+    if(th.style === 'd') {
+      st = style_c
+      img = '<div class="link-img" style="width:25px;height:25px;background:url(' + th.image + ');background-size:cover;background-position:center;background-repeat:no-repeat;"></div><div style="height:45px;width:6px;"></div>'
+    }
+    $('.box').append('<div class="link" style="' + st + '" ripple-onclick="link(' + "'" + th.url + "'" + ')">' + img + th.text + '</div>')
+  }
+  
+  ripple('.link','var(--d-theme-text)','0.3',888,'false');
+}
+
+function link(l) {
+  location.href = l
+}
+initialize()
+</script>
