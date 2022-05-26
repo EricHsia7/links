@@ -1,1 +1,423 @@
+<meta charset="UTF-8">
+<title>Links editor</title>
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com"> 
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=0" />
+<style>
+* {
+  font-family: 'Noto Sans TC', sans-serif;
+  color:#333;
+}
+input,textarea {
+  width:clamp(120px,90%,350px);
+  -webkit-appearance:none;
+  outline:none;
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+  border:1px solid #777;
+  border-radius:10px;
+  height:25px;
+  margin:0px;
+  margin-top:10px;
+  padding:5px;
+}
+textarea {
+  height:75px;
+}
+body {
+   min-height:100vh;
+  display: flex;
+  flex-direction:column;
+  align-items: center;
+}
 
+.links {
+  width:clamp(120px,90%,350px);
+  position:relative;
+  margin-top:10px;
+}
+.links li {
+  width:calc(100% + 12px);
+  height:55px;
+  list-style:none;
+  background:rgba(0, 0, 0, 0);
+  margin:0px;
+  padding:0px;
+  transform:translateX(-6px);
+  margin-top:10px;
+}
+.links li input {
+  width:100%;
+  height:100%;
+  margin:0px;
+  border-radius:8px;
+  background:rgba(0, 0, 0, 0);
+  padding:0px;
+  position:absolute;
+  top:0px;
+  left:0px;
+  box-sizing: border-box;
+  padding:3px
+}
+.text,.url {
+  position:absolute;
+  top:0px;
+  left:0px;
+  width:calc(100% - 60px * 3);
+  height:calc(55px / 2 - 1px);
+}
+.url {
+  top:calc(55px / 2 + 1px);
+}
+.linksbtn {
+  width:55px;
+  height:55px;
+  background:rgab(0, 0, 0, 0);
+  position:absolute;
+  top:0px;
+  right:0px;
+  border:1px solid #777;
+  box-sizing: border-box;
+  border-radius:10px;
+  display: flex;
+justify-content: center;
+align-items: center;
+  flex-direction:column;
+  font-size:10px;
+  -webkit-mask-image:-webkit-radial-gradient(white,black);
+   -webkit-appearance:none;
+  outline:none;
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+}
+.style {
+  right:120px;
+}
+.updowng {
+  right:60px
+}
+.delete {
+  right:0px;
+}
+select {
+  width:38px;
+  height:53px;
+  -webkit-appearance:none;
+  outline:none;
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+  padding:0px;
+  margin:0px;
+  border:none;
+  border-radius:10px;
+  background:rgba(0, 0, 0, 0);
+  display: flex;
+justify-content: center;
+align-items: center;
+}
+.up,.down {
+  width:100%;
+  height:calc(53px / 2);
+  display: flex;
+justify-content: center;
+align-items: center;
+  font-size:12px;
+}
+.addbtn {
+  width:calc(clamp(120px,90%,350px) + 12px);
+  height:45px;
+  display: flex;
+justify-content: center;
+align-items: center;
+  border:1px solid #777;
+  margin-top:10px;
+  border-radius:10px;
+  -webkit-mask-image:-webkit-radial-gradient(white,black);
+   -webkit-appearance:none;
+  outline:none;
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+}
+</style>
+</head>
+<body>
+<input type="text" id="title" placeholder="Title">
+<input type="text" id="theme" placeholder="Theme Color">
+<input type="text" id="color" placeholder="Text Color">
+<textarea id="description" placeholder="Description">
+</textarea>
+<div class="links">
+  <li>
+    <div class="text">
+      <input type="text" fg="links-abcdefg123-text" placeholder="Text">
+    </div>
+    <div class="url">
+      <input type="text" fg="links-abcdefg123-url" placeholder="Url">
+    </div>
+    
+    <div class="linksbtn style">
+      <select name="stl">
+    <option value="a" selected>solid</option>
+    <option value="d">border</option>
+</select>
+    </div>
+    <div class="linksbtn updowng">
+    <div class="up">up</div>
+    <div class="down">down</div>
+    </div>
+    <div class="linksbtn delete">Delete</div>
+</li>
+  
+</div>
+<div class="addbtn" ripple-onclick="addlink()">Add link</div>
+
+<div class="addbtn" ripple-onclick="copylink()">Copy links page link</div> 
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aes-js/3.1.2/index.min.js"></script>
+<script>
+function array_move(arr, old_index, new_index) {
+    if (new_index >= arr.length) {
+        var k = new_index - arr.length + 1;
+        while (k--) {
+            arr.push(undefined);
+        }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    return arr; // for testing
+};
+function encu(textu) {
+  var eechars = "123456789";
+  var eeid = "";
+  for (var i = 0; i < 8; i++) {
+   var eerandomNumber = Math.floor(Math.random() * eechars.length);
+   eeid += eechars.substring(eerandomNumber, eerandomNumber + 1);
+    }
+ var ivqu = parseInt(eeid);
+                
+                var keyu = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+                
+                var textBytesu = aesjs.utils.utf8.toBytes(textu);
+
+                var aesCtru = new aesjs.ModeOfOperation.ctr(keyu, new aesjs.Counter(ivqu));
+                var encryptedBytesu = aesCtru.encrypt(textBytesu);
+
+                var encryptedHexu = aesjs.utils.hex.fromBytes(encryptedBytesu);
+                //console.log(encryptedHexu);
+                return [encryptedHexu,ivqu]
+                
+            }
+
+function decu(juy,oik) {
+                var keye = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+                var gbu = juy;
+                var kiu = oik;
+                var encryptedBytese = aesjs.utils.hex.toBytes(gbu);
+
+                // The counter mode of operation maintains internal state, so to
+                // decrypt a new instance must be instantiated.
+                var aesCtre = new aesjs.ModeOfOperation.ctr(keye, new aesjs.Counter(parseInt(kiu)));
+                var decryptedBytese = aesCtre.decrypt(encryptedBytese);
+
+                // Convert our bytes back into text
+                var decryptedTexte = aesjs.utils.utf8.fromBytes(decryptedBytese);
+                //console.log(decryptedTexte);
+                return decryptedTexte;
+                
+            }
+ function enur(u) {
+return encodeURIComponent(u)
+}
+ function deur(u) {
+return decodeURIComponent(u)
+}
+function gid() {
+var genidchars = "0123456789abcdefghijklmnopqrstuvwxyz";
+            var genid = "";
+            for (var i = 0; i < 16; i++) {
+                var genrandomNumber = Math.floor(Math.random() * genidchars.length);
+                genid += genidchars.substring(genrandomNumber, genrandomNumber + 1);
+            }
+  return genid ;
+
+}
+
+function ripple(select,color,opacity,time,removewh) {
+$(select).on( "click", function( eee ) {
+    if(removewh === 'true') {
+  $(this).css({'width':'','height':''});
+    }
+var ogstyle = $(this).attr('style');
+
+var ppchars = "0123456789abcdefghijklmnopqrstuvwxyz";
+            var ppid = "";
+            for (var i = 0; i < 16; i++) {
+                var randomNumber = Math.floor(Math.random() * ppchars.length);
+                ppid += ppchars.substring(randomNumber, randomNumber + 1);
+            }
+
+            var ppcharsa = "0123456789abcdefghijklmnopqrstuvwxyz";
+            var ppida = "";
+            for (var ia = 0; ia < 16; ia++) {
+                var randomNumbera = Math.floor(Math.random() * ppcharsa.length);
+                ppida += ppcharsa.substring(randomNumbera, randomNumbera + 1);
+            }
+$(this).attr('rippleid',ppida);
+
+  var pou = 'relative' ;
+  if($(this).css('position') === 'absolute') {
+    pou = 'absolute' ;
+  }
+  if($(this).css('position') === 'fixed') {
+    pou = 'fixed' ;
+  }
+  
+            $(this).css({'width':$(this).width() + 'px','height':$(this).height() + 'px','position':pou,'overflow':'hidden','outline':'none','-webkit-tap-highlight-color':'rgba(0,0,0,0)'});
+ ggww = ($(this).width()+$(this).height())*2 ;
+if($(this).width() > $(this).height()) {
+ggww = $(this).width()*4 ;
+}
+else {
+ggww = $(this).height()*4 ;
+}
+
+ var xPos = (eee.pageX - $(this).offset().left)-(ggww/2);
+ var yPos = (eee.pageY - $(this).offset().top)-(ggww/2);
+$('body').append('<style vgf="' + ppid + '">.rippleanimation' + ppid + ' {animation-name:ripple' + ppid + ';animation-duration:' + (time/1000) + 's;animation-fill-mode:forwards;animation-timing-function:ease-out}@keyframes ripple' + ppid + ' {0%{opacity:' + opacity + ';transform:scale(0)}60%{opacity:' + (0) + ';transform:scale(0.8)}100%{opacity:' + (0) + ';transform:scale(1)}}</style>');
+$(this).append('<div style="width:' + ggww + 'px;height:' + ggww + 'px;position: absolute;top:' + yPos + 'px;left:' + xPos + 'px;border-radius:99em;transform:scale(0);opacity:' + opacity + ';background:' + color + '; overflow:hidden; -webkit-user-select:none; outline:none; -webkit-tap-highlight-color:rgba(0,0,0,0);" id="' + ppid + '"></div>');
+
+setTimeout(function () {
+                    $('#' + ppid).attr('class','rippleanimation' + ppid)
+                }, 1);
+     setTimeout(function () {
+                    $('#' + ppid).remove();
+                    $('style[vgf="' + ppid + '"]').remove();
+                    $('*[rippleid="' + ppida + '"]').attr('style',ogstyle);
+                }, time/0.9);
+  if($(this).attr('ripple-onclick') != '') {
+
+  eval('setTimeout(function() {' + $(this).attr('ripple-onclick') + '},' + ((5+(time/1.5))/2) + ');');
+  
+}
+});
+}
+
+ripple('.addbtn','#000','0.3',888,'false');
+
+
+
+var data = {
+  'title':'Links',
+  'theme_color':'#f5f5f5',
+  'text_color':'#333',
+  'description':'',
+  'links':[
+    {
+      'text':'example',
+      'style':'a',
+      'url':'https://example.com'
+    }
+  ]
+}
+
+function sv() {
+  data.title = $('#title').val()
+  data.theme_color = $('#theme').val()
+  data.text_color = $('#color').val()
+  data.description = $('#description').val()
+  var gtf = []
+  for (var i = 0; i < $('.links li').length; i++) {
+    var thtxt = $('.links li .text input').eq(i).val()
+    var thurl = $('.links li .url input').eq(i).val()
+    var thstl = $('.links li .style select').eq(i).val()
+    
+    gtf.push({'text':thtxt,'style':thstl,'url':thurl})
+  }
+  data.links = gtf
+  console.log(data)
+}
+
+function dv() {
+  $('#title').val(data.title)
+  $('#theme').val(data.theme_color)
+  $('#color').val(data.text_color)
+  $('#description').val(data.description)
+  var gtf = data.links
+  var gth = []
+  var fidarr = []
+  for (var i = 0; i < gtf.length; i++) {
+  
+    var stlg = ['selected','']
+  if(gtf[i].style === 'a') {
+    stlg = ['selected','']
+  }
+    if(gtf[i].style === 'c') {
+    stlg = ['','selected']
+  }
+    var fid = gid()
+    fidarr.push('.delete[hj="' + fid + '"],.up[hj="' + fid + '"],.down[hj="' + fid + '"]')
+    gth.push('<li gf="' + fid + '" index="' + i + '"><div class="text"><input fg="' + fid + '-text" placeholder="Text" value="' + gtf[i].text + '"></div><div class="url"><input fg="' + fid + '-url" placeholder="Url" value="' + gtf[i].url + '"></div><div class="linksbtn style"><select name="stl"><option value="a" ' + stlg[0] + '>solid<option value="c" ' + stlg[1] + '>border</select></div><div class="linksbtn updowng"><div class="up" ripple-onclick="up(' + "'" + fid + "'" + ')" hj="' + fid + '">up</div><div class="down" ripple-onclick="down(' + "'" + fid + "'" + ')" hj="' + fid + '">down</div></div><div class="linksbtn delete" hj="' + fid + '" ripple-onclick="del(' + "'" + fid + "'" + ')">Delete</div>')
+    
+       
+      
+  }
+  $('.links').html(gth.join(''))
+  
+   ripple(fidarr.join(','),'#000','0.3',888,'false');
+  console.log(data)
+}
+
+function addlink() {
+  var addlink = {
+  'text':'',
+  'style':'a',
+  'url':''
+}
+  
+  sv()
+  var th = data.links
+  th.push(addlink)
+  data.links = th
+  dv()
+}
+
+function del(fid) {
+  $('li[gf="' + fid + '"]').remove()
+  sv()
+  dv()
+}
+function up(fid) {
+  sv()
+  var index = parseInt($('li[gf="' + fid + '"]').attr('index'))
+  var newindex = index
+  if(index > 0) {
+   newindex = index-1 
+  }
+  data.links = array_move(data.links,index,newindex)
+  dv()
+}
+
+function down(fid) {
+  sv()
+  var index = parseInt($('li[gf="' + fid + '"]').attr('index'))
+  var newindex = index
+  if(index < data.links.length) {
+   newindex = index+1
+  }
+  data.links = array_move(data.links,index,newindex)
+  dv()
+}
+
+function copylink() {
+  sv()
+  var datajson = JSON.stringify(data)
+  var encddata = encu(enur(datajson))
+  var plink = 'https://erichsia7.github.io/links/d/?data=' + encddata.join(':')
+  var textArea = document.createElement("textarea");
+        textArea.value = plink;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("Copy");
+        textArea.remove();
+}
+
+dv()
+</script>
